@@ -1,0 +1,34 @@
+{
+  "name": "pangolia/cache",
+  "description": "Cache helpers for WordPress.",
+  "version": "0.1.0",
+  "homepage": "https://pangolia.com",
+  "scripts": {
+    "phpcs": "./vendor/bin/phpcs --standard=./phpcs.xml",
+    "phpstan": "./vendor/bin/phpstan analyze -c ./phpstan.neon --memory-limit 99"
+  },
+  "autoload": {
+    "psr-4": {
+      "Pangolia\\Cache\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
+    "wp-coding-standards/wpcs": "*",
+    "automattic/phpcs-neutron-ruleset": "^3.3",
+    "phpcompatibility/phpcompatibility-wp": "^2.1",
+    "szepeviktor/phpstan-wordpress": "^0.7.5",
+    "php-stubs/wordpress-stubs": "^5.7"
+  },
+  "license": "BSD-2-Clause",
+  "authors": [
+    {
+      "name": "Pangolia",
+      "email": "brandon@pangolia.com",
+      "homepage": "https://pangolia.com"
+    }
+  ]
+}
