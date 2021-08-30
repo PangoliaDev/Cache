@@ -3,34 +3,45 @@ declare( strict_types = 1 );
 
 namespace Pangolia\Cache;
 
-abstract class FileCache extends AbstractCache implements FileCacheInterface {
+abstract class FileCache implements FileCacheInterface {
+
+	/**
+	 * Debug the file cache.
+	 *
+	 * @var bool
+	 */
+	protected $debug = false;
+
+	/**
+	 * Object cache.
+	 *
+	 * @var array<string, mixed>
+	 */
+	protected $object_cache = [];
 
 	/**
 	 * Returns the path where our cached files will be saved.
 	 *
-	 * @example \trailingslashit( WP_CONTENT_DIR ) . 'my-path/inside/wp-content;
-	 *
 	 * @return string
-	 * @since   0.1.0
+	 * @since 0.1.0
 	 */
-	abstract protected function get_cache_path(): string;
+	abstract public function get_cache_path(): string;
 
 	/**
-	 * Do something with the logs created in the utility.
+	 * Do something with the logs
 	 *
 	 * @param string $message
-	 * @return void
-	 * @since   0.1.0
+	 * @return void;
 	 */
-	abstract protected function log( string $message );
+	abstract public function log( string $message );
 
 	/**
 	 * Get the cached data.
 	 *
 	 * @param string               $cache_file  The cache relative file path.
-	 * @param string|false         $cache_key   The cache key. If set as string, it will get and/or save
-	 *                                          the value from the array key in the file. If set false,
-	 *                                          it will get and/or save the value as an individual whole.
+	 * @param string|false         $cache_key   The cache key. If set as string, it will try to get
+	 *                                          the value from the array key in the file or save it as array value.
+	 *                                          If set false, it will get the entire value from the file.
 	 * @param callable|mixed|false $cache_value Callback function to save data in case nothing is found.
 	 *                                          This can also be the value itself.
 	 * @return mixed
@@ -45,7 +56,7 @@ abstract class FileCache extends AbstractCache implements FileCacheInterface {
 				// Cache key is not set, if value is not cached then we're going to create a cached file and save the
 				// value into it else we're going to get the returned value from the cached file
 				? $this->get_cache_file_data( $cache_file_path )
-				: $this->set_cache( $cache_value, $cache_file_path );
+				: $this->set_cache( $cache_value, false, $cache_file_path );
 		}
 
 		return \is_file( $cache_file_path )
@@ -53,7 +64,7 @@ abstract class FileCache extends AbstractCache implements FileCacheInterface {
 			// within an empty array with the cache key being the array key else we're going to get the returned value
 			// from the cached file and get the definite value based on the cache key being the array key
 			? $this->get_cache_key_data( $cache_file_path, $cache_key, $cache_value )
-			: $this->set_cache( [ $cache_key => $this->get_cache_value( $cache_value ) ], $cache_file_path );
+			: $this->set_cache( $cache_value, $cache_key, $cache_file_path );
 	}
 
 	/**
@@ -61,9 +72,8 @@ abstract class FileCache extends AbstractCache implements FileCacheInterface {
 	 *
 	 * @param string $cache_file_path The path to the cached file.
 	 * @return mixed
-	 * @since   0.1.0
 	 */
-	private function get_cache_file_data( string $cache_file_path ) {
+	protected function get_cache_file_data( string $cache_file_path ) {
 		// We're going to save the file data inside the object in case we need it again.
 		if ( isset( $this->object_cache[ $cache_file_path ] ) ) {
 			$this->log( 'Object cache used' );
@@ -83,9 +93,8 @@ abstract class FileCache extends AbstractCache implements FileCacheInterface {
 	 * @param string               $cache_key       The cache key.
 	 * @param callable|mixed|false $cache_value
 	 * @return mixed
-	 * @since   0.1.0
 	 */
-	private function get_cache_key_data( string $cache_file_path, string $cache_key, $cache_value ) {
+	protected function get_cache_key_data( string $cache_file_path, string $cache_key, $cache_value ) {
 		$cache_file_data = $this->get_cache_file_data( $cache_file_path );
 
 		// If cache key exists, then get the value
@@ -100,7 +109,7 @@ abstract class FileCache extends AbstractCache implements FileCacheInterface {
 		unset( $this->object_cache[ $cache_file_path ] );
 
 		// Renew our cached file.
-		return $this->set_cache( $cache_file_data, $cache_file_path )[ $cache_key ];
+		return $this->set_cache( $cache_file_data, false, $cache_file_path )[ $cache_key ];
 	}
 
 	/**
@@ -108,9 +117,8 @@ abstract class FileCache extends AbstractCache implements FileCacheInterface {
 	 *
 	 * @param callable|mixed|false $cache_value
 	 * @return false|mixed
-	 * @since   0.1.0
 	 */
-	private function get_cache_value( $cache_value ) {
+	protected function get_cache_value( $cache_value ) {
 		return \is_callable( $cache_value )
 			? \call_user_func( $cache_value )
 			: $cache_value;
@@ -122,37 +130,41 @@ abstract class FileCache extends AbstractCache implements FileCacheInterface {
 	 * @param callable|mixed|false $cache_value     Callback function which returns the data to cache,
 	 *                                              or the data itself.
 	 * @param string               $cache_file_path The full file path.
+	 * @param string|false         $cache_key
 	 * @return mixed
 	 * @since 0.1.0
 	 */
-	private function set_cache( $cache_value, string $cache_file_path ) {
+	protected function set_cache( $cache_value, $cache_key, string $cache_file_path ) {
 		$this->log( 'Set cache triggered' );
 
 		// Create all the necessary folders.
 		$this->create_path( dirname( $cache_file_path ) );
 
 		// Get the definite value.
-		$cache_file_data = $this->get_cache_value( $cache_value );
+		$cache_file_data = $cache_key === false
+			? $this->get_cache_value( $cache_value )
+			: [ $cache_key => $this->get_cache_value( $cache_value ) ];
 
 		\file_put_contents( $cache_file_path, $this->render_php( $cache_file_data ) );
 		\chmod( $cache_file_path, 0777 );
 
 		$this->log( "File created or updated: {$cache_file_path}" );
 
-		return $cache_file_data;
+		return $cache_key === false
+			? $cache_file_data
+			: $cache_file_data[ $cache_key ];
 	}
 
 	/**
 	 * Remove cached files.
 	 *
-	 * @param string|false $path The path to the file or directory. When a directory is chosen,
-	 *                           then all the files within the directory will be removed as well.
-	 * @return false|array<string, bool>
+	 * @param string|false $path
+	 * @return array<string, bool>
 	 * @since 0.1.0
 	 */
-	public function remove_cache( $path = false ) {
+	public function remove_cache( $path = false ): array {
 		if ( $path === false ) {
-			return false;
+			return [];
 		}
 
 		$path = trailingslashit( $this->get_cache_path() ) . $path;
@@ -185,9 +197,8 @@ abstract class FileCache extends AbstractCache implements FileCacheInterface {
 	 *
 	 * @param string $pattern
 	 * @return array<int,string>
-	 * @since   0.1.0
 	 */
-	private function get_path_names( string $pattern ): array {
+	protected function get_path_names( string $pattern ): array {
 		$path_names = \glob( $pattern );
 
 		return $path_names !== false
@@ -204,7 +215,7 @@ abstract class FileCache extends AbstractCache implements FileCacheInterface {
 	 * @return bool
 	 * @since 0.1.0
 	 */
-	private function create_path( string $path ): bool {
+	protected function create_path( string $path ): bool {
 		if ( \is_dir( $path ) ) {
 			return true;
 		}
@@ -223,7 +234,7 @@ abstract class FileCache extends AbstractCache implements FileCacheInterface {
 	 * @return string
 	 * @since 0.1.0
 	 */
-	private function render_php( $data ): string {
+	protected function render_php( $data ): string {
 		$php = '<?php ' . PHP_EOL;
 		$php .= $this->render_php_doc() . PHP_EOL;
 		$php .= 'declare( strict_types = 1 ); ' . PHP_EOL . PHP_EOL;
@@ -237,7 +248,7 @@ abstract class FileCache extends AbstractCache implements FileCacheInterface {
 	 * @return string
 	 * @since 0.1.0
 	 */
-	private function render_php_doc(): string {
+	protected function render_php_doc(): string {
 		$php_doc = '/**' . PHP_EOL;
 		$php_doc .= ' * This file has been auto-generated by the project in production-mode' . PHP_EOL;
 		$php_doc .= ' * and is intended to store data permanently without expiration.';

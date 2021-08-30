@@ -1,7 +1,7 @@
 {
   "name": "pangolia/cache",
   "description": "Cache helpers for WordPress.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://pangolia.com",
   "scripts": {
     "phpcs": "./vendor/bin/phpcs --standard=./phpcs.xml",
@@ -13,7 +13,7 @@
     }
   },
   "require": {
-    "php": ">=7.3"
+    "php": ">=7.1"
   },
   "require-dev": {
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
