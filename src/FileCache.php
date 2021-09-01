@@ -6,13 +6,6 @@ namespace Pangolia\Cache;
 abstract class FileCache implements FileCacheInterface {
 
 	/**
-	 * Debug the file cache.
-	 *
-	 * @var bool
-	 */
-	protected $debug = false;
-
-	/**
 	 * Object cache.
 	 *
 	 * @var array<string, mixed>
@@ -25,7 +18,7 @@ abstract class FileCache implements FileCacheInterface {
 	 * @return string
 	 * @since 0.1.0
 	 */
-	abstract public function get_cache_path(): string;
+	abstract protected function get_cache_path(): string;
 
 	/**
 	 * Do something with the logs
@@ -33,7 +26,7 @@ abstract class FileCache implements FileCacheInterface {
 	 * @param string $message
 	 * @return void;
 	 */
-	abstract public function log( string $message );
+	abstract protected function log( string $message );
 
 	/**
 	 * Get the cached data.
