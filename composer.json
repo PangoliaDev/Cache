@@ -1,7 +1,7 @@
 {
   "name": "pangolia/cache",
   "description": "Cache helpers for WordPress.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "homepage": "https://pangolia.com",
   "scripts": {
     "phpcs": "./vendor/bin/phpcs --standard=./phpcs.xml",

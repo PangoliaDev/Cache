@@ -6,19 +6,19 @@ namespace Pangolia\Cache;
 abstract class FileCache implements FileCacheInterface {
 
 	/**
-	 * Object cache.
-	 *
-	 * @var array<string, mixed>
-	 */
-	protected $object_cache = [];
-
-	/**
 	 * Returns the path where our cached files will be saved.
 	 *
 	 * @return string
 	 * @since 0.1.0
 	 */
-	abstract protected function get_cache_path(): string;
+	protected $cache_path;
+
+	/**
+	 * Object cache.
+	 *
+	 * @var array<string, mixed>
+	 */
+	protected $object_cache = [];
 
 	/**
 	 * Do something with the logs
@@ -42,7 +42,7 @@ abstract class FileCache implements FileCacheInterface {
 	 */
 	public function get_cache( string $cache_file, $cache_key, $cache_value ) {
 		$this->log( "---- File cache started for {$cache_key} in {$cache_file} ----" );
-		$cache_file_path = \trailingslashit( $this->get_cache_path() ) . $cache_file . '.php';
+		$cache_file_path = \trailingslashit( $this->cache_path ) . $cache_file . '.php';
 
 		if ( $cache_key === false ) {
 			return \is_file( $cache_file_path )
@@ -160,7 +160,7 @@ abstract class FileCache implements FileCacheInterface {
 			return [];
 		}
 
-		$path = trailingslashit( $this->get_cache_path() ) . $path;
+		$path = trailingslashit( $this->cache_path ) . $path;
 		$deleted = [];
 
 		// If path is a directory, then delete all the files inside the
