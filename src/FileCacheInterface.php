@@ -17,7 +17,7 @@ interface FileCacheInterface {
 	 * @return mixed
 	 * @since 0.1.0
 	 */
-	public function get_cache( string $cache_file, $cache_key, $cache_value );
+	public static function get_cache( string $cache_file, $cache_key, $cache_value );
 
 	/**
 	 * Remove cached files.
@@ -27,5 +27,5 @@ interface FileCacheInterface {
 	 * @return false|array<string, bool>
 	 * @since 0.1.0
 	 */
-	public function remove_cache( $path = false );
+	public static function remove_cache( $path = false );
 }
