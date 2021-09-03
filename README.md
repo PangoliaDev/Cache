@@ -1,6 +1,6 @@
 # Cache helpers for WordPress
 
-Cache helper classes, created for WordPress development.
+Cache helpers for WordPress development.
 
 ## Installation
 
