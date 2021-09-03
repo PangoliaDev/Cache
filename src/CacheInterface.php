@@ -119,4 +119,5 @@ interface CacheInterface {
 	 * @since 0.3.0
 	 */
 	public static function remove_site_transient( string $key, $default = null );
+
 }

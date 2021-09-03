@@ -104,4 +104,5 @@ trait TransientCache {
 
 		return $default;
 	}
+
 }
