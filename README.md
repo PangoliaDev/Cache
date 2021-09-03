@@ -29,8 +29,8 @@ class Cache implements CacheInterface {
 	/**
 	 * Set the cache properties.
 	 */
-	public function __construct() {
-		static::$file_cache_storage = 'wp-content/your/file-cache/storage';
+	public function __construct( $file_storage ) {
+		static::$file_cache_storage = $file_storage;
 	}
 }
 ````
@@ -38,6 +38,8 @@ class Cache implements CacheInterface {
 ## Examples
 
 ````php
+new Cache( 'wp-content/your/file-cache/storage' );
+
 $my_value = Cache::get_file_cache('my/file', 'my-key', function() {
 return 'the cached value';
 });
