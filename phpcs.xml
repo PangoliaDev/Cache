@@ -12,7 +12,7 @@
     <arg name="extensions" value="php"/>
 
     <!-- Check for PHP cross-version compatibility. -->
-    <config name="testVersion" value="7.1-"/>
+    <config name="testVersion" value="7.4-"/>
     <rule ref="PHPCompatibilityWP">
         <include-pattern>*\.php$</include-pattern>
     </rule>
