@@ -30,7 +30,7 @@ class Cache implements CacheInterface {
 	 * Set the cache properties.
 	 */
 	public function __construct() {
-		static::$file_cache_storage = 'wp-content/your-file/cache/storage';
+		static::$file_cache_storage = 'wp-content/your/file-cache/storage';
 	}
 }
 ````
