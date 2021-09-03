@@ -118,5 +118,5 @@ interface CacheInterface {
 	 * @return mixed The cached value, when available, or $default.
 	 * @since 0.3.0
 	 */
-	public static function forget_site_transient( string $key, $default = null );
+	public static function remove_site_transient( string $key, $default = null );
 }
