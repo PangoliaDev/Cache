@@ -15,16 +15,10 @@ composer require pangolia/cache
 ````php
 class Cache implements CacheInterface {
 	use 
-            FileCache, 
-            ObjectCache, 
+            FileCache,
+            ObjectCache,
+            FragmentCache,
             TransientCache;
-
-	/**
-	 * The file cache storage path.
-	 *
-	 * @var string
-	 */
-	protected static $file_cache_storage;
 
 	/**
 	 * Set the cache properties.
@@ -41,16 +35,19 @@ class Cache implements CacheInterface {
 new Cache( 'wp-content/your/file-cache/storage' );
 
 $my_value = Cache::get_file_cache('my/file', 'my-key', function() {
-return 'the cached value';
+  return 'the cached value';
 });
 
+$my_value = Cache::get_transient( 'my-key', function() {
+  return 'the cached value';
+} );
 
 $my_value = Cache::get_object_cache( 'my-key', function() {
-return 'the cached value';
+  return 'the cached value';
 }, 'my-cache-group' );
 
 
-$my_value = Cache::get_transient( 'my-key', function() {
-return 'the cached value';
-} );
+Cache::get_fragment_cache( 'my-key', function() {
+  echo 'the cached value'
+}, 'my-cache-group' );
 ````

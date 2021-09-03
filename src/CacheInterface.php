@@ -69,6 +69,32 @@ interface CacheInterface {
 	public static function remove_object_cache( string $key, string $group = '', $default = null );
 
 	/**
+	 * Fragment caching
+	 *
+	 * @param string   $key                     The cache key.
+	 * @param callable $callback                Callback function to save data in case nothing is found.
+	 * @param string   $group                   Optional. Where the cache contents are grouped. Default empty.
+	 * @param int      $expire                  Optional. The number of seconds before the cache entry should expire.
+	 *                                          Default is 0 (as long as possible).
+	 * @return void
+	 * @since 0.4.0
+	 */
+	public static function get_fragment_cache( string $key, callable $callback, string $group = '', int $expire = 0 );
+
+	/**
+	 * Remove fragment cache
+	 *
+	 * wp_cache_delete wrapper
+	 *
+	 * @param string $key   The cache key.
+	 * @param string $group Optional. The cache group. Default is empty.
+	 *
+	 * @return bool
+	 * @since 0.4.0
+	 */
+	public static function remove_fragment_cache( string $key, string $group = '' ): bool;
+
+	/**
 	 * Retrieve a value from transients. If it doesn't exist, run the $callback to generate and
 	 * cache the value.
 	 *

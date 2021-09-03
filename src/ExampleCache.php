@@ -7,14 +7,8 @@ class ExampleCache implements CacheInterface {
 	use
 		FileCache,
 		ObjectCache,
+		FragmentCache,
 		TransientCache;
-
-	/**
-	 * The file cache storage path.
-	 *
-	 * @var string
-	 */
-	protected static string $file_cache_storage;
 
 	/**
 	 * Set the cache properties.

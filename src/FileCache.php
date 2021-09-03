@@ -71,7 +71,7 @@ trait FileCache {
 		// If path is a directory, then delete all the files inside the
 		// dir and then the dir itself.
 		if ( \is_dir( $file ) ) {
-			foreach ( static::get_path_names( $file . '/*' ) as $file_path ) {
+			foreach ( static::get_file_path_names( $file . '/*' ) as $file_path ) {
 
 				if ( \is_file( $file_path ) ) {
 					$deleted[ $file_path ] = \unlink( $file_path );
@@ -169,7 +169,7 @@ trait FileCache {
 	 * @return array<int,string>
 	 * @since 0.1.0
 	 */
-	protected static function get_path_names( string $pattern ): array {
+	protected static function get_file_path_names( string $pattern ): array {
 		$path_names = \glob( $pattern );
 
 		return $path_names !== false
