@@ -138,21 +138,21 @@ trait FileCache {
 	/**
 	 * Create the cached file.
 	 *
-	 * @param callable     $callback  Callback function which returns the data to cache,
-	 * @param string       $file_path The full file path.
-	 * @param string|false $key
+	 * @param callable|array $value     Callback function which returns the data to cache or array value,
+	 * @param string         $file_path The full file path.
+	 * @param string|false   $key
 	 * @return mixed
 	 * @since 0.1.0
 	 */
-	protected static function set_file_cache( callable $callback, $key, string $file_path ) {
+	protected static function set_file_cache( $value, $key, string $file_path ) {
 
 		// Create all the necessary folders.
 		static::create_file_path( dirname( $file_path ) );
 
 		// Get the definite value.
 		$file_data = $key === false
-			? \call_user_func( $callback )
-			: [ $key => \call_user_func( $callback ) ];
+			? static::get_file_cache_value( $value )
+			: [ $key => static::get_file_cache_value( $value ) ];
 
 		\file_put_contents( $file_path, static::render_file_cache_php( $file_data ) );
 		\chmod( $file_path, 0777 );
@@ -160,6 +160,18 @@ trait FileCache {
 		return $key === false
 			? $file_data
 			: $file_data[ $key ];
+	}
+
+	/**
+	 * Get the definite cached value.
+	 *
+	 * @param callable|mixed|false $cache_value
+	 * @return false|mixed
+	 */
+	protected static function get_file_cache_value( $cache_value ) {
+		return \is_callable( $cache_value )
+			? \call_user_func( $cache_value )
+			: $cache_value;
 	}
 
 	/**
