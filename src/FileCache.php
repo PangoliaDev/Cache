@@ -97,7 +97,7 @@ trait FileCache {
 	 * @return mixed
 	 * @since 0.1.0
 	 */
-	protected static function get_file_cache_data( string $file_path ) {
+	public static function get_file_cache_data( string $file_path ) {
 		// We're going to save the file data inside the object in case we need it again.
 		if ( isset( static::$file_object_cache[ $file_path ] ) ) {
 			return static::$file_object_cache[ $file_path ];
@@ -106,6 +106,16 @@ trait FileCache {
 		static::$file_object_cache[ $file_path ] = include $file_path;
 
 		return static::$file_object_cache[ $file_path ];
+	}
+
+	/**
+	 * Returns the file path with our file cache storage path
+	 *
+	 * @param string $file The cache relative file path.
+	 * @return string
+	 */
+	public static function get_file_path( string $file ): string {
+		return \trailingslashit( static::$file_cache_storage ) . $file . '.php';
 	}
 
 	/**
