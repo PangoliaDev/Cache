@@ -34,7 +34,7 @@ trait FileCache {
 	 * @since 0.1.0
 	 */
 	public static function get_file_cache( string $file, $key, callable $callback ) {
-		$file_path = \trailingslashit( static::$file_cache_storage ) . $file . '.php';
+		$file_path = static::get_file_path( $file );
 
 		if ( $key === false ) {
 			return \is_file( $file_path )
