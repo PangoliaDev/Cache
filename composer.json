@@ -1,27 +1,37 @@
 {
   "name": "pangolia/cache",
   "description": "Cache helpers for WordPress.",
-  "version": "0.4.3",
+  "version": "0.5",
   "homepage": "https://pangolia.com",
   "scripts": {
     "phpcs": "./vendor/bin/phpcs --standard=./phpcs.xml",
-    "phpstan": "./vendor/bin/phpstan analyze -c ./phpstan.neon --memory-limit 99"
+    "phpstan": "./vendor/bin/phpstan analyze -c ./phpstan.neon --memory-limit 99",
+    "phpunit": "./vendor/bin/phpunit"
   },
   "autoload": {
     "psr-4": {
       "Pangolia\\Cache\\": "src/"
     }
   },
+  "autoload-dev": {
+    "classmap": ["src/"],
+    "psr-4": {
+      "Pangolia\\CacheTests\\": "tests/",
+      "Pangolia\\CacheTests\\Mocks\\": "tests/mocks/"
+    }
+  },
   "require": {
     "php": ">=7.4"
   },
   "require-dev": {
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
     "wp-coding-standards/wpcs": "*",
-    "automattic/phpcs-neutron-ruleset": "^3.3",
+    "automattic/phpcs-neutron-ruleset": "^3.4",
     "phpcompatibility/phpcompatibility-wp": "^2.1",
-    "szepeviktor/phpstan-wordpress": "^0.7.5",
-    "php-stubs/wordpress-stubs": "^5.7"
+    "szepeviktor/phpstan-wordpress": "^1.0.3",
+    "php-stubs/wordpress-stubs": "^5.7",
+    "brain/monkey": "~2.0.0",
+    "phpunit/phpunit": "^9"
   },
   "license": "BSD-2-Clause",
   "authors": [
@@ -30,5 +40,11 @@
       "email": "brandon@pangolia.com",
       "homepage": "https://pangolia.com"
     }
-  ]
+  ],
+  "config": {
+    "platform": {
+      "php": "7.4"
+    },
+    "platform-check": false
+  }
 }

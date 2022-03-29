@@ -1,9 +1,9 @@
 <?php
 declare( strict_types = 1 );
 
-namespace Pangolia\Cache;
+namespace Pangolia\Cache\Traits;
 
-class ObjectCache {
+trait ObjectCache {
 
 	/**
 	 * Retrieve a value from the object cache. If it doesn't exist, cache the value.
@@ -16,7 +16,7 @@ class ObjectCache {
 	 * @return mixed
 	 * @since 0.3.0
 	 */
-	public function get( string $key, callable $callback, string $group = '', int $expire = 0 ) {
+	public static function get_object_cache( string $key, callable $callback, string $group = '', int $expire = 0 ) {
 		$found = false;
 		$cached = \wp_cache_get( $key, $group, false, $found );
 
@@ -39,7 +39,7 @@ class ObjectCache {
 	 * @return array
 	 * @since 0.3.0
 	 */
-	public function get_multiple( array $keys, string $group = '', int $expire = 0 ): array {
+	public static function get_object_cache_multiple( array $keys, string $group = '', int $expire = 0 ): array {
 		$cache_keys = [];
 
 		foreach ( $keys as $cache_key => $cache_value ) {
@@ -50,7 +50,7 @@ class ObjectCache {
 
 		$cached = \wp_cache_get_multiple( $cache_keys, $group );
 
-		foreach ( array_filter( $cached, fn( $value ) => $value === '' ) as $empty_key => $empty_value ) {
+		foreach ( array_filter( $cached, fn( $value ) => $value == '' ) as $empty_key => $empty_value ) {
 			if ( isset( $keys[ $empty_key ] ) && \is_callable( $keys[ $empty_key ] ) ) {
 				$cache_value = \call_user_func( $keys[ $empty_key ] );
 
@@ -74,7 +74,7 @@ class ObjectCache {
 	 * @return mixed The cached value, when available, or $default.
 	 * @since 0.3.0
 	 */
-	public function delete( string $key, string $group = '', $default = null ) {
+	public static function remove_object_cache( string $key, string $group = '', $default = null ) {
 		$found = false;
 		$cached = \wp_cache_get( $key, $group, false, $found );
 

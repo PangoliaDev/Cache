@@ -3,7 +3,7 @@ declare( strict_types = 1 );
 
 namespace Pangolia\Cache;
 
-trait TransientCache {
+class Transient {
 
 	/**
 	 * Retrieve a value from transients. If it doesn't exist, run the $callback to generate and
@@ -17,7 +17,7 @@ trait TransientCache {
 	 * @return mixed The value returned from $callback, pulled from transients when available.
 	 * @since 0.3.0
 	 */
-	public static function get_transient( string $key, callable $callback, int $expire = 0 ) {
+	public function get( string $key, callable $callback, int $expire = 0 ) {
 		$cached = \get_transient( $key );
 
 		if ( false !== $cached ) {
@@ -43,7 +43,7 @@ trait TransientCache {
 	 * @return mixed The cached value, when available, or $default.
 	 * @since 0.3.0
 	 */
-	public static function remove_transient( string $key, $default = null ) {
+	public function delete( string $key, $default = null ) {
 		$cached = \get_transient( $key );
 
 		if ( false !== $cached ) {
@@ -67,7 +67,7 @@ trait TransientCache {
 	 * @return mixed The value returned from $callback, pulled from transients when available.
 	 * @since 0.3.0
 	 */
-	public static function get_site_transient( string $key, callable $callback, int $expire = 0 ) {
+	public function get_site( string $key, callable $callback, int $expire = 0 ) {
 		$cached = \get_site_transient( $key );
 
 		if ( false !== $cached ) {
@@ -93,7 +93,7 @@ trait TransientCache {
 	 * @return mixed The cached value, when available, or $default.
 	 * @since 0.3.0
 	 */
-	public static function remove_site_transient( string $key, $default = null ) {
+	public function delete_site( string $key, $default = null ) {
 		$cached = \get_site_transient( $key );
 
 		if ( false !== $cached ) {
